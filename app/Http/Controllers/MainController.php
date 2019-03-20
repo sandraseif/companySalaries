@@ -19,8 +19,8 @@ class MainController extends Controller
         $firstDayThisMonth    = new \DateTime($first_day_this_month);
         $lastDayThisMonth     = new \DateTime($firstDayThisMonth->format('Y-m-t'));
         $lastDayThisMonth->setTime(23, 59, 59);
-        $nameOfLastDay = date('D', strtotime($lastDayThisMonth->format("Y-m-d")));
-        $nameOfMonth = date('M', strtotime($lastDayThisMonth->format("Y-m-d")));
+        $nameOfLastDay        = date('D', strtotime($lastDayThisMonth->format("Y-m-d")));
+        $nameOfMonth          = date('M', strtotime($lastDayThisMonth->format("Y-m-d")));
         $salariesWithoutBonus = 0;
         $bonusAmounts         = 0;  
 
@@ -44,19 +44,29 @@ class MainController extends Controller
             $salaryDay      =   date('d', strtotime($lastDayThisMonth->format("Y-m-d")));
         }
             
-        $employees = Employee::all();
+        $employees = Employee::select(  "employees.name AS employeename",
+                                        "employees.ID AS employeeID",
+                                        "employees.salary as employeebasesalary",
+                                        "employees.bonuspercentage as employeebonus",
+                                        "departments.name AS departmentname",
+                                        "departments.ID AS departmentID",
+                                        "departments.basesalary as departmentbasesalary",
+                                        "departments.bonuspercentage as departmentbonus")  
+                    ->join('departments_employees', 'employees.id', '=', 'departments_employees.employeeID')
+                    ->join('departments', 'departments.id', '=', 'departments_employees.departmentID')
+                    ->get();
+
+     
         foreach($employees as $employee){
-            if($employee->bonuspercentage == 0){
-                $depemployee     = DepartmentsEmployees::where('employeeID', $employee->id)->first(); 
-                $departmentID    = $depemployee->departmentID;
-                $bonusPercentage = Department::find($departmentID)->bonuspercentage;  
+            if($employee->employeebonus == 0){
+                $bonusPercentage    = $employee->departmentbonus; 
             }else{
-                $bonusPercentage   = $employee->bonuspercentage;   
+                $bonusPercentage   = $employee->employeebonus;   
             }
 
-            $bonusPerEmployee     =  $employee->salary*($bonusPercentage/100);
+            $bonusPerEmployee     =  $employee->employeebasesalary*($bonusPercentage/100);
             $bonusAmounts         += $bonusPerEmployee; 
-            $salariesWithoutBonus = $salariesWithoutBonus+$employee->salary;
+            $salariesWithoutBonus = $salariesWithoutBonus+$employee->employeebasesalary;
         }
         $totalPayments = $bonusAmounts+$salariesWithoutBonus;
         $salaries = ['Month'=>$nameOfMonth,
@@ -65,7 +75,7 @@ class MainController extends Controller
                     'Salaries_total'=> '$'.$salariesWithoutBonus,
                     'Bonus_total'=> '$'.$bonusAmounts,
                     'Payments_total'=>'$'.$totalPayments];
-            return $salaries;
+        return $salaries;
     }
   
      //getting the salaries
