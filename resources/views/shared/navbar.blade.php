@@ -30,7 +30,7 @@
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
                             <ul class="nav navbar-nav">
-                              <li ><a href="{{ url('/') }}/consume">Rest API</a></li>
+                             <!-- <li ><a href="{{ url('/') }}/consume">Rest API</a></li>-->
                               <li class=@if (\Request::is('/'))active @endif><a href="{{ url('/') }}">Home</a></li>
                               <li class=@if (\Request::is('employees'))active @endif><a href="{{ url('/') }}/employees">Employees</a></li>
                               <li class=@if (\Request::is('departments'))active @endif><a href="{{ url('/') }}/departments">Departments</a></li>

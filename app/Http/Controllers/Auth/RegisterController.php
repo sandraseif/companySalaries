@@ -85,6 +85,8 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         $user->generateToken();
-        return response()->json(['data' => $user->toArray(),"redirect"=>'login'], 201);        
+        //print_r($user);die;
+        //$user->api_token = $user->generateToken();
+        return response()->json(['data' => $user->toArray(),"apitoken"=>$user->generateToken()], 201);        
     }
 }

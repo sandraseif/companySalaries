@@ -24,13 +24,24 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token','api_token'
     ];
-
-    public function generateToken(){
+public function up(){
+    Schema::table('users', function (Blueprint $table) {
+        $table->string('api_token', 60)->unique()->nullable();
+    });
+}
+public function down()
+{
+    Schema::table('users', function (Blueprint $table) {
+        $table->dropColumn(['api_token']);
+    });
+}
+   public function generateToken()
+    {
         $this->api_token = str_random(60);
         $this->save();
 
-        return $this->remember_token;
+        return $this->api_token;
     }
 }
