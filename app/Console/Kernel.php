@@ -25,9 +25,21 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('MainController:basic_email')
-        //          ->everyMinute();
-       $schedule->call('App\Http\Controllers\MainController@basic_email')->monthlyOn(18);
+        $first_day_this_month = date('Y-m-01');
+        $firstDayThisMonth    = new \DateTime($first_day_this_month);
+        $lastDayThisMonth     = new \DateTime($firstDayThisMonth->format('Y-m-t'));
+        $lastDayThisMonth->setTime(23, 59, 59);
+        $nameOfLastDay = date('D', strtotime($lastDayThisMonth->format("Y-m-d")));
+     
+        if($nameOfLastDay == 'Fri'){
+            $salaryDay   =   date('d', strtotime('-3 day', strtotime($lastDayThisMonth->format("Y-m-d"))));
+        }else if($nameOfLastDay == 'Sat') {
+            $salaryDay   = date('d', strtotime('-4 day', strtotime($lastDayThisMonth->format("Y-m-d"))));
+        }else{
+            $salaryDay   = date('d', strtotime('-2 day', strtotime($lastDayThisMonth->format("Y-m-d"))));
+        }
+            
+       $schedule->call('App\Http\Controllers\MainController@basic_email')->monthlyOn($salaryDay);
     }
 
     /**

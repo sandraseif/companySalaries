@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 //The controller to render the views from the routing
 class PagesController extends Controller
 {   
     //redener the main index
-    public function index(){
+    public function index(){   
         return view('pages.index');
     }
 

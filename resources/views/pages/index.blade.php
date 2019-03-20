@@ -2,11 +2,11 @@
 
 @section('content')
 <div class="jumbotron text-center">
-    <h1>Welcome to the admin panel</h1>
+    <h1>Welcome to the admin panel </h1>
     <p>You can modify departments and employees from here</p>
     <p>
-        <a class="btn btn-primary btn-lg" href="/login" role="button">Login</a>
-        <a class="btn btn-success btn-lg" href="/register" role="button">Register</a>
+     <!--   <a class="btn btn-primary btn-lg" href="login" role="button">Login</a>
+        <a class="btn btn-success btn-lg" href="register" role="button">Register</a>-->
     </p>
 </div>
 @endsection
